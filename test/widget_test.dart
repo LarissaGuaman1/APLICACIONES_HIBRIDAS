@@ -1,30 +1,37 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:login_app/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('Muestra la pantalla de login', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Mi Biblioteca Kawaii'), findsOneWidget);
+    expect(find.text('INGRESAR'), findsOneWidget);
+    expect(find.text('¿No tienes cuenta? Regístrate'), findsOneWidget);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('Muestra mensaje si intenta ingresar sin datos',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.text('INGRESAR'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Ingrese usuario y contraseña'), findsOneWidget);
+  });
+
+  testWidgets('Navega al home cuando ingresa usuario y contraseña',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.enterText(find.byType(TextField).at(0), 'larissa');
+    await tester.enterText(find.byType(TextField).at(1), '1234');
+
+    await tester.tap(find.text('INGRESAR'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Bienvenida a tu rincón lector'), findsOneWidget);
   });
 }
