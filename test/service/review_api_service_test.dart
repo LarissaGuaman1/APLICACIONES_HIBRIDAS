@@ -3,20 +3,21 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:login_app/models/review_model.dart';
+
+import 'package:login_app/data/models/review_model.dart';
 import 'package:login_app/services/review_api_service.dart';
-
-
 
 void main() {
   group('ReviewApiService', () {
     test('getReviews retorna una lista de reseñas si la respuesta es 200',
         () async {
       final mockClient = MockClient((request) async {
+        expect(request.url.path, '/reviews');
+
         return http.Response(
           jsonEncode([
             {
-              'id': 1,
+              'id': '1',
               'bookTitle': 'El Principito',
               'genre': 'Fantasía',
               'comment': 'Una historia tierna y reflexiva.',
@@ -48,7 +49,7 @@ void main() {
 
         return http.Response(
           jsonEncode({
-            'id': 2,
+            'id': '2',
             'bookTitle': 'Harry Potter',
             'genre': 'Fantasía',
             'comment': 'Tiene magia y aventura.',
@@ -74,8 +75,9 @@ void main() {
 
       final createdReview = await service.createReview(review);
 
-      expect(createdReview.id, 2);
+      expect(createdReview.remoteId, '2');
       expect(createdReview.bookTitle, 'Harry Potter');
+      expect(createdReview.isSynced, 1);
     });
 
     test('getReviews lanza excepción si la respuesta no es 200', () async {

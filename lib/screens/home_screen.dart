@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../main.dart';
+import '../routes/app_routes.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -23,6 +25,91 @@ class HomeScreen extends StatelessWidget {
         Navigator.pop(context);
         Navigator.pushReplacementNamed(context, route);
       },
+    );
+  }
+
+  Drawer menuDrawer(BuildContext context) {
+    return Drawer(
+      backgroundColor: AppColors.fondo,
+      child: Column(
+        children: [
+          UserAccountsDrawerHeader(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.rosa,
+                  AppColors.lila,
+                  AppColors.celeste,
+                ],
+              ),
+            ),
+            accountName: const Text(
+              'Lectora Kawaii',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppColors.texto,
+              ),
+            ),
+            accountEmail: const Text(
+              'reseñas@biblioteca.com',
+              style: TextStyle(color: AppColors.texto),
+            ),
+            currentAccountPicture: const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.menu_book_rounded,
+                color: AppColors.texto,
+                size: 36,
+              ),
+            ),
+          ),
+          drawerItem(
+            context: context,
+            icon: Icons.home_rounded,
+            title: 'Inicio',
+            route: AppRoutes.home,
+          ),
+          drawerItem(
+            context: context,
+            icon: Icons.rate_review_rounded,
+            title: 'Agregar reseña',
+            route: AppRoutes.review,
+          ),
+          drawerItem(
+            context: context,
+            icon: Icons.comment_rounded,
+            title: 'Mis reseñas',
+            route: AppRoutes.myReviews,
+          ),
+          drawerItem(
+            context: context,
+            icon: Icons.star_rounded,
+            title: 'Libros recomendados',
+            route: AppRoutes.recommended,
+          ),
+          drawerItem(
+            context: context,
+            icon: Icons.info_rounded,
+            title: 'Acerca de',
+            route: AppRoutes.about,
+          ),
+          const Spacer(),
+          ListTile(
+            leading: const Icon(Icons.logout_rounded, color: AppColors.texto),
+            title: const Text(
+              'Cerrar sesión',
+              style: TextStyle(
+                color: AppColors.texto,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, AppRoutes.login);
+            },
+          ),
+          const SizedBox(height: 12),
+        ],
+      ),
     );
   }
 
@@ -57,99 +144,6 @@ class HomeScreen extends StatelessWidget {
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.arrow_forward_ios_rounded),
         onTap: onTap,
-      ),
-    );
-  }
-
-  Drawer menuDrawer(BuildContext context) {
-    return Drawer(
-      backgroundColor: AppColors.fondo,
-      child: Column(
-        children: [
-          UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.rosa,
-                  AppColors.lila,
-                  AppColors.celeste,
-                ],
-              ),
-            ),
-            accountName: const Text(
-              'Lectora Kawaii',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: AppColors.texto,
-              ),
-            ),
-            accountEmail: const Text(
-              'reseñas@biblioteca.com',
-              style: TextStyle(color: AppColors.texto),
-            ),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.menu_book_rounded,
-                color: AppColors.texto,
-                size: 36,
-              ),
-            ),
-          ),
-
-          drawerItem(
-            context: context,
-            icon: Icons.home_rounded,
-            title: 'Inicio',
-            route: '/home',
-          ),
-
-          drawerItem(
-            context: context,
-            icon: Icons.rate_review_rounded,
-            title: 'Agregar reseña',
-            route: '/review',
-          ),
-
-          drawerItem(
-            context: context,
-            icon: Icons.comment_rounded,
-            title: 'Mis reseñas',
-            route: '/my-reviews',
-          ),
-
-          drawerItem(
-            context: context,
-            icon: Icons.star_rounded,
-            title: 'Libros recomendados',
-            route: '/recommended',
-          ),
-
-          drawerItem(
-            context: context,
-            icon: Icons.info_rounded,
-            title: 'Acerca de',
-            route: '/about',
-          ),
-
-          const Spacer(),
-
-          ListTile(
-            leading: const Icon(Icons.logout_rounded, color: AppColors.texto),
-            title: const Text(
-              'Cerrar sesión',
-              style: TextStyle(
-                color: AppColors.texto,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onTap: () {
-              Navigator.pushReplacementNamed(context, '/');
-            },
-          ),
-
-          const SizedBox(height: 12),
-        ],
       ),
     );
   }
@@ -206,34 +200,49 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 28),
-
             cardHome(
               icon: Icons.rate_review_rounded,
               title: 'Agregar reseña',
               subtitle: 'Registra un libro y tu opinión.',
               onTap: () {
-                Navigator.pushNamed(context, '/review');
+                Navigator.pushNamed(context, AppRoutes.review);
               },
             ),
-
             cardHome(
               icon: Icons.comment_rounded,
               title: 'Mis reseñas',
               subtitle: 'Consulta tus comentarios guardados.',
               onTap: () {
-                Navigator.pushNamed(context, '/my-reviews');
+                Navigator.pushNamed(context, AppRoutes.myReviews);
               },
             ),
-
             cardHome(
               icon: Icons.star_rounded,
               title: 'Libros recomendados',
               subtitle: 'Mira sugerencias de lectura.',
               onTap: () {
-                Navigator.pushNamed(context, '/recommended');
+                Navigator.pushNamed(context, AppRoutes.recommended);
               },
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 55,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/ruta-que-no-existe');
+                },
+                icon: const Icon(Icons.warning_rounded),
+                label: const Text('Probar ruta no existente'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.celeste,
+                  foregroundColor: AppColors.texto,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

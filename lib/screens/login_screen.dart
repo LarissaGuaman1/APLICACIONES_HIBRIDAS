@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../main.dart';
+import '../routes/app_routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,13 +23,21 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     } else {
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
     }
+  }
+
+  @override
+  void dispose() {
+    usuarioController.dispose();
+    claveController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.fondo,
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -74,9 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: AppColors.texto,
                       ),
                     ),
-
                     const SizedBox(height: 20),
-
                     const Text(
                       'Mi Biblioteca Kawaii',
                       textAlign: TextAlign.center,
@@ -86,9 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     const SizedBox(height: 8),
-
                     const Text(
                       'Ingresa para guardar tus reseñas',
                       textAlign: TextAlign.center,
@@ -97,9 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 15,
                       ),
                     ),
-
                     const SizedBox(height: 30),
-
                     TextField(
                       controller: usuarioController,
                       decoration: InputDecoration(
@@ -113,9 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 18),
-
                     TextField(
                       controller: claveController,
                       obscureText: true,
@@ -130,9 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 28),
-
                     SizedBox(
                       width: double.infinity,
                       height: 55,
@@ -154,12 +154,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 16),
-
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/register');
+                        Navigator.pushNamed(context, AppRoutes.register);
                       },
                       child: const Text(
                         '¿No tienes cuenta? Regístrate',

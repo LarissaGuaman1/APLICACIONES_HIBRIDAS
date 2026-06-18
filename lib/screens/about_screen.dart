@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../main.dart';
 import 'home_screen.dart';
 
@@ -47,7 +48,7 @@ class AboutScreen extends StatelessWidget {
               ),
               SizedBox(height: 14),
               Text(
-                'Aplicación móvil desarrollada en Flutter para registrar reseñas, comentarios, calificaciones y recomendaciones de libros.',
+                'Aplicación móvil desarrollada en Flutter para registrar reseñas, comentarios, calificaciones y recomendaciones de libros. También permite guardar reseñas sin internet usando SQLite y sincronizarlas cuando vuelva la conexión.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,

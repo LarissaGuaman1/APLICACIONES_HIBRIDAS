@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../models/review_model.dart';
+import '../data/models/review_model.dart';
 
 class ReviewApiService {
   final String baseUrl;
@@ -24,7 +24,7 @@ class ReviewApiService {
         return ReviewModel.fromJson(item);
       }).toList();
     } else {
-      throw Exception('Error al obtener reseñas');
+      throw Exception('Error al obtener reseñas desde la API');
     }
   }
 
@@ -39,21 +39,21 @@ class ReviewApiService {
       body: jsonEncode(review.toJson()),
     );
 
-    if (response.statusCode == 201 || response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final Map<String, dynamic> data = jsonDecode(response.body);
       return ReviewModel.fromJson(data);
     } else {
-      throw Exception('Error al crear reseña');
+      throw Exception('Error al crear reseña en la API');
     }
   }
 
-  Future<void> deleteReview(int id) async {
-    final url = Uri.parse('$baseUrl/reviews/$id');
+  Future<void> deleteReview(String remoteId) async {
+    final url = Uri.parse('$baseUrl/reviews/$remoteId');
 
     final response = await client.delete(url);
 
     if (response.statusCode != 200 && response.statusCode != 204) {
-      throw Exception('Error al eliminar reseña');
+      throw Exception('Error al eliminar reseña en la API');
     }
   }
 }

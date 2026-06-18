@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -14,12 +14,12 @@ void main() {
     expect(find.text('Mi Biblioteca Kawaii'), findsOneWidget);
 
     await tester.enterText(
-      find.byType(TextField).at(0),
+      find.byType(EditableText).at(0),
       'larissa',
     );
 
     await tester.enterText(
-      find.byType(TextField).at(1),
+      find.byType(EditableText).at(1),
       '1234',
     );
 

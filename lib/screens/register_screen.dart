@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../main.dart';
+import '../routes/app_routes.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -33,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       );
 
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
     }
   }
 
@@ -63,8 +65,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   @override
+  void dispose() {
+    nombreController.dispose();
+    usuarioController.dispose();
+    correoController.dispose();
+    claveController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.fondo,
       appBar: AppBar(
         title: const Text('Registrar usuario'),
       ),
@@ -90,9 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 size: 75,
                 color: AppColors.lila,
               ),
-
               const SizedBox(height: 12),
-
               const Text(
                 'Crear cuenta lectora',
                 style: TextStyle(
@@ -101,36 +111,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               const SizedBox(height: 25),
-
               campoTexto(
                 label: 'Nombre completo',
                 icon: Icons.badge_outlined,
                 controller: nombreController,
               ),
-
               campoTexto(
                 label: 'Usuario',
                 icon: Icons.person_outline,
                 controller: usuarioController,
               ),
-
               campoTexto(
                 label: 'Correo',
                 icon: Icons.email_outlined,
                 controller: correoController,
               ),
-
               campoTexto(
                 label: 'Contraseña',
                 icon: Icons.lock_outline,
                 controller: claveController,
                 ocultar: true,
               ),
-
               const SizedBox(height: 12),
-
               SizedBox(
                 width: double.infinity,
                 height: 55,

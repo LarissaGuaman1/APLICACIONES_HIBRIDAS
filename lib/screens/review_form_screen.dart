@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+
 import '../main.dart';
+import '../data/models/review_model.dart';
+import '../services/api_config.dart';
+import '../services/local_database_service.dart';
+import '../services/review_api_service.dart';
+import '../services/review_repository.dart';
 import 'home_screen.dart';
 
 class ReviewFormScreen extends StatefulWidget {
@@ -53,6 +59,13 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
 
   final List<String> emocionesSeleccionadas = ['Feliz'];
 
+  final ReviewRepository repository = ReviewRepository(
+    localDb: LocalDatabaseService.instance,
+    apiService: ReviewApiService(
+      baseUrl: ApiConfig.baseUrl,
+    ),
+  );
+
   Future<void> seleccionarFecha() async {
     DateTime? fecha = await showDatePicker(
       context: context,
@@ -97,26 +110,39 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
     }
   }
 
-  void guardarResena() {
+  Future<void> guardarResena() async {
+    final review = ReviewModel(
+      bookTitle: libroController.text.isEmpty
+          ? 'Libro sin título'
+          : libroController.text,
+      genre: generoSeleccionado,
+      comment: comentarioController.text.isEmpty
+          ? 'Sin comentario'
+          : comentarioController.text,
+      rating: int.parse(calificacion[0]),
+      recommended: recomienda,
+      isSynced: 0,
+    );
+
+    await repository.saveReview(review);
+    await repository.syncReviews();
+
+    if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Reseña guardada correctamente'),
+        content: Text(
+          'Reseña guardada. Si no hay internet, se sincronizará después.',
+        ),
         backgroundColor: Colors.purple,
       ),
     );
-  }
 
-  Widget campoTitulo(String texto) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        texto,
-        style: const TextStyle(
-          color: AppColors.texto,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
+    libroController.clear();
+    comentarioController.clear();
+    fechaController.clear();
+    rangoController.clear();
+    horaController.clear();
   }
 
   Widget tarjetaFormulario({
@@ -141,11 +167,28 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          campoTitulo(titulo),
+          Text(
+            titulo,
+            style: const TextStyle(
+              color: AppColors.texto,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
           child,
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    libroController.dispose();
+    fechaController.dispose();
+    rangoController.dispose();
+    horaController.dispose();
+    comentarioController.dispose();
+    super.dispose();
   }
 
   @override
@@ -208,7 +251,6 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
             },
           ),
         ),
-
         tarjetaFormulario(
           titulo: 'Fecha en que terminaste el libro',
           child: TextField(
@@ -222,7 +264,6 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
             ),
           ),
         ),
-
         tarjetaFormulario(
           titulo: 'Tiempo de lectura',
           child: TextField(
@@ -236,7 +277,6 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
             ),
           ),
         ),
-
         tarjetaFormulario(
           titulo: 'Hora de la reseña',
           child: TextField(
@@ -250,7 +290,6 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
             ),
           ),
         ),
-
         tarjetaFormulario(
           titulo: 'Etiquetas del libro',
           child: Wrap(
@@ -265,7 +304,6 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
             }).toList(),
           ),
         ),
-
         tarjetaFormulario(
           titulo: 'Estado del libro',
           child: Wrap(
@@ -304,7 +342,6 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
             },
           ),
         ),
-
         tarjetaFormulario(
           titulo: 'Comentario o reseña',
           child: TextField(
@@ -317,7 +354,6 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
             ),
           ),
         ),
-
         tarjetaFormulario(
           titulo: 'Género del libro',
           child: DropdownButtonFormField<String>(
@@ -338,7 +374,6 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
             },
           ),
         ),
-
         tarjetaFormulario(
           titulo: 'Calificación',
           child: Column(
@@ -376,7 +411,6 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
             ],
           ),
         ),
-
         tarjetaFormulario(
           titulo: 'Emociones que dejó el libro',
           child: Wrap(
@@ -400,7 +434,6 @@ class _ReviewFormScreenState extends State<ReviewFormScreen> {
             }).toList(),
           ),
         ),
-
         SizedBox(
           width: double.infinity,
           height: 55,
